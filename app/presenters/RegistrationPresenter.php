@@ -17,7 +17,7 @@ final class RegistrationPresenter extends Nette\Application\UI\Presenter
 	 */
 	protected $webinar;
 
-	public function __construct(Webinar $webinar, )
+	public function __construct(Webinar $webinar)
 	{
 		Presenter::__construct();
 		$this->webinar = $webinar;

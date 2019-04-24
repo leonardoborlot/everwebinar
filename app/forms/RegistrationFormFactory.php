@@ -25,7 +25,7 @@ class RegistrationFormFactory
 		$form = new Form;
 
 		$form->addSelect('webinar', 'Webinar:')
-			 ->setItems($this->webinar->getNames());
+			 ->setItems($this->webinar->getWebinars());
 
 		$form->addText('firstname', 'First Name:')
 			 ->setRequired()->setMaxLength(100);
