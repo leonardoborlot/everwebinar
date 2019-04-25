@@ -9,6 +9,7 @@ use Nette;
 use App\Forms\RegistrationFormFactory;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\Presenter;
+use RegisterException;
 
 final class RegistrationPresenter extends Nette\Application\UI\Presenter
 {
@@ -17,20 +18,20 @@ final class RegistrationPresenter extends Nette\Application\UI\Presenter
 	 */
 	protected $webinar;
 
+
 	public function __construct(Webinar $webinar)
 	{
 		Presenter::__construct();
 		$this->webinar = $webinar;
 	}
 
-	public function renderSuccess() :void
+	public function renderSuccess(array $values) :void
 	{
+		$this->template->firstname = $values['firstname'];
+		$this->template->lastname = $values['lastname'];
 
-	}
-
-	public function renderError() :void
-	{
-
+		$webinarsIdsNames = $this->webinar->getWebinarsIdsNames();
+		$this->template->webinar = $webinarsIdsNames[$values['webinar']];
 	}
 
 	protected function createComponentRegistrationForm(): Form
@@ -46,8 +47,14 @@ final class RegistrationPresenter extends Nette\Application\UI\Presenter
 
 	public function registrationFormSubmitted(Form $form)
 	{
-		$values = $form->getValues();
+		$values = (array)$form->getValues();
 
-
+		try {
+			$this->webinar->register($values);
+			$this->forward(':success', ['values' => $values]);
+		} catch (RegisterException $e)
+		{
+			$this->forward(':error');
+		}
 	}
 }

@@ -11,7 +11,6 @@ use Psr\Http\Message\ResponseInterface;
 class Webinar
 {
 	protected const API_URL = 'https://webinarjam.genndi.com/api/everwebinar';
-	protected const API_KEY = '';
 
 	/**
 	 * @var Client
@@ -19,29 +18,29 @@ class Webinar
 	protected $guzzleClient;
 
 	/**
-	 * @var array $additionalHeaders
+	 * @var array $additionalRequestParams
 	 */
-	protected $additionalHeaders = [];
+	protected $additionalRequestParams = [];
 
 	public function __construct()
 	{
 		$this->guzzleClient = new Client(['base_uri' => self::API_URL]);
 	}
 
-	protected function setAdditionalHeaders(array $headers) :void
+	protected function setAdditionalRequestParams(array $requestParams) :void
 	{
-		$this->additionalHeaders = $headers;
+		$this->additionalRequestParams = $requestParams;
 	}
 
-	protected function getAdditionalHeaders() :array
+	protected function getAdditionalRequestParams() :array
 	{
-		return $this->additionalHeaders;
+		return $this->additionalRequestParams;
 	}
 
-	protected function getHeaders() :array
+	protected function getRequestParams() :array
 	{
-		return ['headers' =>
-			array_merge(['api_key' => self::API_KEY], $this->getAdditionalHeaders())
+		return ['form_params' =>
+			array_merge(['api_key' => getenv('API_KEY')], $this->getAdditionalRequestParams())
 		];
 	}
 
@@ -50,7 +49,7 @@ class Webinar
 		return $this->guzzleClient->request(
 			$method,
 			self::API_URL . $resource,
-			$this->getHeaders()
+			$this->getRequestParams()
 		);
 	}
 
@@ -63,95 +62,50 @@ class Webinar
 		return NULL;
 	}
 
-	protected function getResponseTextAsArray(string $response) : ?array
-	{
-		if ($response)
-		{
-			return json_decode($response, TRUE);
-		}
-		return NULL;
-	}
-
 	public function getWebinarInfo(string $id) :array
 	{
-		$response = '{
-			 "status": "success",
-			 "message": "",
-			 "webinar": {
-			 "webinar_id": "demo123",
-			 "name": "name of webinar",
-			 "description": "description of webinar",
-			 "schedules": [
-			 {
-			 "date": "Every Day, 06:30 PM",
-			 "schedule": 0
-			 },
-			 {
-			 "date": "Monday, 6 Jul 08:30 AM",
-			 "schedule": 1
-			 },
-			 {
-			 "date": "Every Tuesday, 6 Jul 03:00 PM",
-			 "schedule": 2
-			 }
-			 ],
-			 "timezone": "America/Los_Angeles",
-			 "presenters": [
-			 {
-			 "name": "John Doe",
-			 "email": "john.doe@gmail.com",
-			 "picture": "https://test.s3.amazonaws.com/default_user.jpg"
-			 }
-			 ],
-			 "registration_url": "http://app.webinarjam.net/register/1/demo123",
-			 "registration_type": "free",
-			 "registration_fee": 0,
-			 "registration_currency": "",
-			 "registration_checkout_url": "",
-			 "registration_post_payment_url": ""
-			 }
-			}';
-		return $this->getResponseTextAsArray($response);
-//		$this->setAdditionalHeaders(['webinar_id' => $id]);
-//		$response = $this->sendRequest('/webinars', 'POST');
-//		return $this->getResponseAsArray($response);
-	}
-
-	public function getWebinars() :array
-	{
-		$response = '{
-			 "status": "success",
-			 "webinars": [
-			 {
-			 "webinar_id": "demo123",
-			 "name": "WebinarOne",
-			 "description": "description of webinar one",
-			 "schedules": [
-			 "Every Day 18:30 PM",
-			 "Every Wednesday 19:00 PM",
-			 "Mon, 6 Jul 20:01 PM"
-			 ],
-			 "timezone": "America/Chicago",
-			 },{
-			 "webinar_id": "demo1234",
-			 "name": "WebinarTwo",
-			 "description": "description of webinar two",
-			 "schedules": [
-			 "Every Day 18:30 PM",
-			 "Every Wednesday 19:00 PM",
-			 "Mon, 6 Jul 20:01 PM"
-			 ],
-			 "timezone": "America/Chicago",
-			 },
-			 ]
-			}';
-		return $this->getResponseTextAsArray($response);
+		$this->setAdditionalRequestParams(['webinar_id' => $id]);
 		$response = $this->sendRequest('/webinar', 'POST');
 		return $this->getResponseAsArray($response);
 	}
 
-	public function register()
+	public function getWebinars() :?array
 	{
+		$response = $this->sendRequest('/webinars', 'POST');
+		return $this->getResponseAsArray($response);
+	}
 
+	public function getWebinarsIdsNames() :array
+	{
+		$webinars = $this->getWebinars();
+
+		$ids = array_column($webinars['webinars'], 'webinar_id');
+
+		$names = array_column($webinars['webinars'], 'name');
+
+		return array_combine($ids, $names);
+	}
+
+	public function register($data)
+	{
+		$params = [
+			'webinar_id' => $data['webinar'],
+			'first_name' => $data['firstname'],
+			'schedule' => 0,
+			'email' => $data['firstname']
+		];
+		foreach (['lastname', 'email', 'phone', 'promo'] as $param) {
+			if (isset($data[$param]))
+			{
+				$params[$param] = $data[$param];
+			}
+		}
+
+		return [];
+
+//		$this->setAdditionalRequestParams($params);
+//		return
+//		$response = $this->sendRequest('/register', 'POST');
+//		return $this->getResponseAsArray($response);
 	}
 }

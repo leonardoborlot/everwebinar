@@ -9,11 +9,6 @@ use Nette\Application\UI\Form;
 
 class RegistrationFormFactory
 {
-	/**
-	 * @var Webinar
-	 */
-	protected $webinar;
-
 	public function __construct(Webinar $webinar)
 	{
 		$this->webinar = $webinar;
@@ -24,14 +19,17 @@ class RegistrationFormFactory
 	{
 		$form = new Form;
 
-		$form->addSelect('webinar', 'Webinar:')
-			 ->setItems($this->webinar->getWebinars());
+		$webinarsIdsNames = $this->webinar->getWebinarsIdsNames();
 
-		$form->addText('firstname', 'First Name:')
-			 ->setRequired()->setMaxLength(100);
+		$form->addSelect('webinar', 'Webinar:')->setItems($webinarsIdsNames);
 
-		$form->addText('lastname', 'Last Name:')
-			 ->setRequired()->setMaxLength(100);
+		$form->addText('firstname', 'First Name:')->setRequired()->setMaxLength(100);
+
+		$form->addText('lastname', 'Last Name:')->setMaxLength(100);
+
+		$form->addText('email', 'Email:')->addRule(Form::EMAIL)->setMaxLength(100);
+
+		$form->addText('phone', 'Phone:')->addRule(Form::PATTERN, 'Phone must contain only numbers', '[0-9]+')->setMaxLength(20);
 
 		$form->addTextArea('promo', 'Promo code')->setMaxLength(100);
 

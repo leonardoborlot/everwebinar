@@ -20,7 +20,8 @@
 		"nette/utils": "^3.0",
 		"latte/latte": "^2.5",
 		"tracy/tracy": "^2.6",
-		"guzzlehttp/guzzle": "^6.3"
+		"guzzlehttp/guzzle": "^6.3",
+		"vlucas/phpdotenv": "^3.3"
 	},
 	"require-dev": {
 		"nette/tester": "^2.0"
