@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Forms;
 
-use App\Model\Webinar;
+use App\Model\Webinar\WebinarManager;
 use Nette\Application\UI\Form;
 
 class RegistrationFormFactory
 {
-	public function __construct(Webinar $webinar)
+	protected $webinarManager;
+
+	public function __construct(WebinarManager $webinarManager)
 	{
-		$this->webinar = $webinar;
+		$this->webinarManager = $webinarManager;
 	}
 
 
@@ -19,21 +21,21 @@ class RegistrationFormFactory
 	{
 		$form = new Form;
 
-		$webinarsIdsNames = $this->webinar->getWebinarsIdsNames();
+		$webinarsIdNamePair = $this->webinarManager->getWebinarsIdNamePair();
 
-		$form->addSelect('webinar', 'Webinar:')->setItems($webinarsIdsNames);
+		$form->addSelect(Config::FORM_CONTROL_NAME_WEBINAR, 'Webinar:')->setItems($webinarsIdNamePair);
 
-		$form->addText('firstname', 'First Name:')->setRequired()->setMaxLength(100);
+		$form->addText(Config::FORM_CONTROL_NAME_FIRSTNAME, 'First Name:')->setRequired()->setMaxLength(100);
 
-		$form->addText('lastname', 'Last Name:')->setMaxLength(100);
+		$form->addText(Config::FORM_CONTROL_NAME_LASTNAME, 'Last Name:')->setMaxLength(100);
 
-		$form->addText('email', 'Email:')->addRule(Form::EMAIL)->setMaxLength(100);
+		$form->addText(Config::FORM_CONTROL_NAME_EMAIL, 'Email:')->setRequired()->addRule(Form::EMAIL)->setMaxLength(100);
 
-		$form->addText('phone', 'Phone:')->addRule(Form::PATTERN, 'Phone must contain only numbers', '[0-9]+')->setMaxLength(20);
+		$form->addText(Config::FORM_CONTROL_NAME_PHONE, 'Phone:')->addRule(Form::PATTERN, 'Phone must contain only numbers', '[0-9]+')->setMaxLength(20);
 
-		$form->addTextArea('promo', 'Promo code')->setMaxLength(100);
+		$form->addTextArea(Config::FORM_CONTROL_NAME_PROMO, 'Promo code')->setMaxLength(100);
 
-		$form->addSubmit('register', 'Register!');
+		$form->addSubmit(Config::FORM_CONTROL_NAME_REGISTER, 'Register!');
 
 		return $form;
 	}

@@ -13,5 +13,8 @@ session:
 
 services:
 	router: App\Router\RouterFactory::createRouter
-	- App\Model\Webinar
+	- App\Model\Webinar\WebinarApi
+	- App\Model\Webinar\WebinarManager
+	- App\Model\Webinar\WebinarDatabase
+	- Nette\Caching\Cache
 	- App\Model\User
