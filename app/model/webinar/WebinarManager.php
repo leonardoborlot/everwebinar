@@ -55,9 +55,9 @@ class WebinarManager
 
 		if ($webinar && $user)
 		{
-			if ($this->existRegistration($user->Id, $webinarId))
+			if ($this->existRegistration((string)$user->Id, (string)$webinar->Id))
 			{
-				throw new RegistrationException('User with email \''.$userEmail.'\' is already registered!');
+				throw new RegistrationException('User with email \''.$userEmail.'\' is already registered.');
 			}
 		}
 

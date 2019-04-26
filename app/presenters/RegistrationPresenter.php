@@ -59,7 +59,7 @@ final class RegistrationPresenter extends Nette\Application\UI\Presenter
 			$this->forward(':success', ['values' => $values]);
 		} catch (RegistrationException $e)
 		{
-			$this->forward(':error', ['error' => $e->getMessage()]);
+			$this->forward(':error', ['message' => $e->getMessage()]);
 		}
 	}
 }

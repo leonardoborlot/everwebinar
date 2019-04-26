@@ -52,7 +52,7 @@ class WebinarDatabase
 
 	public function loadRegistration($userId, $webinarId)
 	{
-		return $this->database->fetch('SELECT * FROM Registration WHERE UserId = ? AND WebinarId', $userId, $webinarId);
+		return $this->database->fetch('SELECT * FROM Registration WHERE UserId = ? AND WebinarId = ?', $userId, $webinarId);
 	}
 
 	public function saveRegistration($userId, $webinarId, $promo = '')
