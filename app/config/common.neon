@@ -17,4 +17,4 @@ services:
 	- App\Model\Webinar\WebinarManager
 	- App\Model\Webinar\WebinarDatabase
 	- Nette\Caching\Cache
-	- App\Model\User
+	- App\Model\Report\ReportDatabase

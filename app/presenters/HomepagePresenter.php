@@ -10,9 +10,4 @@ use Nette\Application\UI\Presenter;
 final class HomepagePresenter extends Nette\Application\UI\Presenter
 {
 
-	public function renderDefault() : void
-	{
-		$this->redirect('Registration:');
-	}
-
 }

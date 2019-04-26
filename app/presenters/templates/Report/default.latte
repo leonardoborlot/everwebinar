@@ -1,0 +1,39 @@
+<h1>REPORTS</h1>
+
+<h2>Webinars Users Count</h2>
+<table border="1" style="text-align: center">
+	<thead>
+		<tr><td><b>Webinar</b></td><td><b>Users Count</b></td></tr>
+	</thead>
+	<tbody>
+		{foreach $webinarsUsersCount as $webinarUsersCount}
+			<tr>
+				<td>{$webinarUsersCount->WebinarName}</td>
+				<td>{$webinarUsersCount->UsersCount}</td>
+			</tr>
+		{/foreach}
+	</tbody>
+</table>
+
+<h2>Webinars Users</h2>
+
+{foreach $webinarsUsers as $webinarUsers}
+	<h4>{$webinarUsers['webinarName']}</h4>
+	<table border="1" style="text-align: center">
+		<thead>
+		<tr><td><b>Firstname</b></td><td><b>Lastname</b></td><td><b>Email</b></td><td><b>Phone</b></td></tr>
+		</thead>
+		<tbody>
+		{foreach $webinarUsers['users'] as $webinarUser}
+			<tr>
+				<td>{$webinarUser->Firstname}</td>
+				<td>{$webinarUser->Lastname}</td>
+				<td>{$webinarUser->Email}</td>
+				<td>{$webinarUser->Phone}</td>
+			</tr>
+		{/foreach}
+		</tbody>
+	</table>
+{/foreach}
+<br />
+<a n:href="Homepage:">Back to homepage</a>
